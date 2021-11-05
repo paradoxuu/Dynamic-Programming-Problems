@@ -49,7 +49,7 @@ function vfsolvex(vnew, kgrid, tolerance, imax, σ=1.5)
 #We also solve the log utility problem analytically in PS 5, and the numerical and 
 #analytical solution coinside
 
-(d)
+#(d)
 function policy(x)
     e=getindex(findall(kgrid .== x),1)
     return kprime[e]  
