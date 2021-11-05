@@ -70,18 +70,34 @@ plot!(kgrid, v10, label = "v10")
 plot!(kgrid, v, label = "v")
 
 #1(c)
+
+#define a function to find the value in krgrid which is closest to the input x and return the index 
 function findindex(x)
     a=findmin(abs.(x .- kgrid), dims=1)
     return a[2]
 end 
 
-
+#policy(k) returns the optimal k'
 function policy(x)
     e=getindex(findall(kgrid .== x),1)
     return kprime[e]  
 end 
 
+# the function find and plot the time path of k
 function findkpath(T, k_0)
+    w = findindex(k_0)
+    kpath = zeros(T)
+    k = kgrid[w]
+        for i in 1:T
+            k = policy(k)
+            kpath[i] = k
+        end 
+    return kpath 
+end
+
+# # the function find and plot the time path of k
+
+function plotkpath(T, k_0)
 w = findindex(k_0)
 kpath = zeros(T)
 k = kgrid[w]
@@ -94,10 +110,13 @@ plot(time, kpath, label = "kpath")
 end 
 
 findkpath(100, 0.5)
+plotkpath(100, 0.5)
 
+#the steady state level of capital is around 4
 #1(d)
 findkpath(100, 4.5)
-
+plotkpath(100, 4.5)
+#the steady state level of capital is also around 4
 #(e)
 
 #(e)(a)
@@ -177,11 +196,32 @@ function findkpath_E(T, k_0)
             k = policy_E(k)
             kpath[i] = k
         end 
+    return kpath 
+end 
+
+function plotkpath_E(T, k_0)
+    w = findindex(k_0)
+    kpath = zeros(T)
+    k = kgrid[w]
+        for i in 1:T
+            k = policy_E(k)
+            kpath[i] = k
+        end 
     time = collect(range(1, T, length = T))
     plot(time, kpath, label = "kpath")
 end 
 
 findkpath_E(100, 0.5)
+plotkpath_E(100, 0.5)
+
+#the steady state level of capital is around 4
 
 #1(d)
 findkpath_E(100, 4.5)
+plotkpath_E(100, 4.5)
+
+#the steady state level of capital is aslo around 4
+
+#the steady state k is same as before but the capital converges faster
+#1/σ is the eslasticity of intertemperal substitution, the bigger eslasticity means it is harder 
+# to subsitute consumption intertemperally, as a result, the consumer saves more resulting more faster capital accumulation
