@@ -1,6 +1,6 @@
 using Plots
 using BenchmarkTools
-
+#2(a)
 function vfsolvex(vnew, kgrid, tolerance, imax, σ=1.5)
     β=0.9
   
@@ -34,9 +34,8 @@ function vfsolvex(vnew, kgrid, tolerance, imax, σ=1.5)
   kgrid = collect(range(klower, stop=kupper, length = n))
   (v, kprime, kprimeindex) = vfsolvex(zeros(n), kgrid, 0.001, 1000)
   #(b)
-    kgrid = collect(range(klower, stop=kupper, length=500))
-    (v, kprime, kprimeindex) = vfsolvex(zeros(500), kgrid, 0.001, 1000);
-    plot(kgrid, v, label = "v, σ=1.5")
+  (v, kprime, kprimeindex) = vfsolvex(zeros(500), kgrid, 0.001, 1000);
+   plot(kgrid, v, label = "v, σ=1.5")
   
   #(c)
   plot()
@@ -45,9 +44,10 @@ function vfsolvex(vnew, kgrid, tolerance, imax, σ=1.5)
     (v, kprime, kprimeindex) = vfsolvex(zeros(500), kgrid, 0.001, n, x);
     display(plot!(kgrid, v, label = "v, σ=$x"))
   end
-f(x, β)= (1/(1-β))log(1-β) + (β/(1-β)^2)log(β) + (1/(1-β))log(x)
-g(x) = f(x, 0.9)
-plot!(a, g, kgrid, label = "vlog")
+#as σ->1, the value function is getting closer to log utility value function
+#the vfsolvex autometically compute log utility solution when σ=1.
+#We also solve the log utility problem analytically in PS 5, and the numerical and 
+#analytical solution coinside
 
 (d)
 function policy(x)
@@ -68,9 +68,22 @@ function findkpath(T, k_0)
             k = policy(k)
             kpath[i] = k
         end 
+    return kpath 
+end 
+
+function plotkpath(T, k_0)
+    w = findindex(k_0)
+    kpath = zeros(T)
+    k = kgrid[w]
+        for i in 1:T
+            k = policy(k)
+            kpath[i] = k
+        end 
     time = collect(range(1, T, length = T))
     plot(time, kpath, label = "kpath")
 end 
     
 findkpath(100, 5)
+plotkpath(100, 5)
+# this is a cake eating problem with no production, so capital always decline
 
